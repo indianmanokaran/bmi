@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'BMI Calculator',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -27,22 +28,47 @@ class BMIPage extends StatefulWidget {
 }
 
 class _BMIPageState extends State<BMIPage> {
-  RangeValues _values = const RangeValues(0, 100);
-  RangeValues _values1 = const RangeValues(0, 100);
-  double ans=0.0;
+  RangeValues _values = const RangeValues(0, 200);
+  RangeValues _values1 = const RangeValues(0, 300);
+  String calans='Loading...';
 
-  calculateBMI(double weight, double heightInCentimeters) {
+  double _counter = 0.0;
+
+  calculateBMI() {
+    double height = double.parse(_values.end.toStringAsFixed(1));
+    double weight = double.parse(_values1.end.toStringAsFixed(1));
     print(weight);
-    print(heightInCentimeters);
-    double ans1 = weight / (heightInCentimeters * heightInCentimeters);
-    print(ans1);
+    print(height);
+    height=height/100;
+    print("%%%%%%%%%%");
+    print(height);
+    double ans1 = (weight / (height * height));
     setState(() {
-      ans = ans1;
-      print(ans);
+      _counter =double.parse(ans1.toStringAsFixed(1));
+      print(_counter);
+      getWeightStatus(_counter);
     });
     return ans1;
   }
 
+  String getWeightStatus(double bmi) {
+    if (bmi < 18.5) {
+      calans='Underweight';
+      return 'Underweight';
+    } else if (bmi >= 18.5 && bmi < 25) {
+      calans='Normal Weight';
+
+      return 'Normal Weight';
+    } else if (bmi >= 25 && bmi < 30) {
+      calans='Overweight';
+
+      return 'Overweight';
+    } else {
+      calans='Obese';
+
+      return 'Obese';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +81,13 @@ class _BMIPageState extends State<BMIPage> {
           Expanded(
             flex: 2,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               height: 00.0,
               width: double.infinity,
               color: Colors.green,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children:  [
                   SizedBox(
                     height: 30,
                   ),
@@ -80,12 +106,12 @@ class _BMIPageState extends State<BMIPage> {
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      ans != null ? ans.toStringAsFixed(1) : '0.0',
+                        '$_counter', // Removing const from here
                       style: TextStyle(
                         fontSize: 50,
                         color: Colors.white,
@@ -95,20 +121,21 @@ class _BMIPageState extends State<BMIPage> {
                   ),
 
 
+
                   SizedBox(
-                    height: 50,
+                    height: 10,
                   ),
                   Row(
                     children: [
                       Text(
-                        "condition:",
+                        "Your condition:",
                         style: TextStyle(
-                            fontWeight: FontWeight.normal, fontSize: 28),
+                            fontWeight: FontWeight.normal, fontSize: 20,color: Colors.purple),
                       ),
                       Text(
-                        "UnderWeight",
+                        calans,
                         style: TextStyle(
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -131,7 +158,7 @@ class _BMIPageState extends State<BMIPage> {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
-                        '${_values.end.toStringAsFixed(1)}', // Convert RangeValues to String
+                       'Choose Data', // Convert RangeValues to String
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -152,7 +179,7 @@ class _BMIPageState extends State<BMIPage> {
                               ),
                               SizedBox(width: 20), // Adjust the width as needed
                               Text(
-                                "167.74 cm",
+                                  '${_values.end.toStringAsFixed(1)}',
                                 style: TextStyle(fontSize: 30),
                               ),
                             ],
@@ -166,7 +193,7 @@ class _BMIPageState extends State<BMIPage> {
                             });
                           },
                           min: 0,
-                          max: 100,
+                          max: 200,
                         ),
                       ],
                     ),
@@ -182,7 +209,7 @@ class _BMIPageState extends State<BMIPage> {
                               ),
                               SizedBox(width: 20), // Adjust the width as needed
                               Text(
-                                "56 kg",
+                                '${_values1.end.toStringAsFixed(1)}',
                                 style: TextStyle(fontSize: 30),
                               ),
                             ],
@@ -196,10 +223,10 @@ class _BMIPageState extends State<BMIPage> {
                             });
                           },
                           min: 0,
-                          max: 100,
+                          max: 300,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 50),
+                          padding: EdgeInsets.only(top: 30),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50.0)
@@ -208,9 +235,9 @@ class _BMIPageState extends State<BMIPage> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                double weight = double.parse(_values.end.toStringAsFixed(1));
-                                double height = double.parse(_values1.end.toStringAsFixed(1));
-                                calculateBMI(weight, height);
+                                // double weight = double.parse(_values.end.toStringAsFixed(1));
+                                // double height = double.parse(_values1.end.toStringAsFixed(1));
+                                calculateBMI();
                               },
 
                               style: ElevatedButton.styleFrom(
